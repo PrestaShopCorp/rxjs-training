@@ -1,0 +1,19 @@
+{
+  "name": "rxjs-training",
+  "version": "1.0.0",
+  "description": "RxJS training exercices",
+  "main": "index.js",
+  "private": true,
+  "devDependencies": {
+    "jest": "^24.9.0"
+  },
+  "dependencies": {
+    "rxjs": "^6.5.3"
+  },
+  "scripts": {
+    "test": "jest tests"
+  },
+  "jest": {
+    "verbose": false
+  }
+}
