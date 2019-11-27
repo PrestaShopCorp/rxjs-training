@@ -36,11 +36,11 @@ Pour soumettre vos résultats, créez une branche à votre nom, faites une PR et
 - **ex2** : Comment élaguer un observable
 - **ex3** : Transformer un observable
 - **ex4** : Aggregation de résultats
+- **ex5** : Rate limiting
 
 ### TODO
 
-- **ex5** : Interception des erreurs / retry
-- **ex6** : Rate limiting
+- **ex6** : Gestion des erreurs
 - **ex7** : Executer des actions en parallèle
 
 
