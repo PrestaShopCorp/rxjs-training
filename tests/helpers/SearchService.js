@@ -1,6 +1,6 @@
-const  {throwError, of} = require("rxjs");
+const  {throwError, of, defer} = require("rxjs");
 
-class GithubService {
+class SearchService {
 
     constructor() {
 
@@ -101,37 +101,41 @@ class GithubService {
 
     search(keyword, page = 1) {
 
-        const currentTimestamp = Date.now();
+        return defer(() => {
 
-        if (currentTimestamp - this.lastCall < 100) {
-            const diff = currentTimestamp - this.lastCall;
-            return throwError(new Error(`Rate limit exceeed (last call was ${diff} ms ago)`));
-        }
+            const currentTimestamp = Date.now();
 
-        this.lastCall = currentTimestamp;
-        this.calls += 1;
+            if (currentTimestamp - this.lastCall < 100) {
+                const diff = currentTimestamp - this.lastCall;
+                return throwError(new Error(`Rate limit exceeed (last call was ${diff} ms ago)`));
+            }
 
-        if (this.responses.hasOwnProperty(keyword) && this.responses[keyword].hasOwnProperty(page)) {
-            return of(this.responses[keyword][page]);
-        }
+            this.lastCall = currentTimestamp;
+            this.calls += 1;
 
-        return of([
-            {
-                title: "Vous Etes Perdu ?",
-                url: 'https://www.perdu.com/',
-            },
-            {
-                title: 'Perdu : Définition simple et facile du dictionnaire - L\'Internaute',
-                url: 'https://www.linternaute.fr/dictionnaire/fr/definition/perdu/',
-            },
-            {
-                title: "perdu — Wiktionnaire",
-                url: 'https://fr.wiktionary.org/wiki/perdu',
-            },
-        ]);
+            if (this.responses.hasOwnProperty(keyword) && this.responses[keyword].hasOwnProperty(page)) {
+                return of(this.responses[keyword][page]);
+            }
+
+            return of([
+                {
+                    title: "Vous Etes Perdu ?",
+                    url: 'https://www.perdu.com/',
+                },
+                {
+                    title: 'Perdu : Définition simple et facile du dictionnaire - L\'Internaute',
+                    url: 'https://www.linternaute.fr/dictionnaire/fr/definition/perdu/',
+                },
+                {
+                    title: "perdu — Wiktionnaire",
+                    url: 'https://fr.wiktionary.org/wiki/perdu',
+                },
+            ]);
+
+        });
 
     }
 
 }
 
-module.exports = GithubService;
+module.exports = SearchService;

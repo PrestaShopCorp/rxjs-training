@@ -1,7 +1,7 @@
 const {Observable, of, from, EMPTY} = require("rxjs");
 
 const {ex2} = require("../exercices/ex2");
-const {toArray, tap, distinct} = require("rxjs/operators");
+const {toArray} = require("rxjs/operators");
 
 describe("Exercice2", () => {
 

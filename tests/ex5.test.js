@@ -1,4 +1,4 @@
-const {Observable, forkJoin} = require("rxjs");
+const {Observable} = require("rxjs");
 
 const SearchService = require('./helpers/SearchService');
 const Exercice5 = require("../exercices/ex5");

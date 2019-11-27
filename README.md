@@ -37,10 +37,10 @@ Pour soumettre vos résultats, créez une branche à votre nom, faites une PR et
 - **ex3** : Transformer un observable
 - **ex4** : Aggregation de résultats
 - **ex5** : Rate limiting
+- **ex6** : Gestion des erreurs
 
 ### TODO
 
-- **ex6** : Gestion des erreurs
 - **ex7** : Executer des actions en parallèle
 
 

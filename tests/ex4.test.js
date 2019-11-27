@@ -1,8 +1,8 @@
-const {Observable, forkJoin} = require("rxjs");
+const {Observable} = require("rxjs");
 
 const GithubService = require('./helpers/GithubService');
 const Exercice4 = require("../exercices/ex4");
-const {toArray, tap, distinct} = require("rxjs/operators");
+const {toArray} = require("rxjs/operators");
 
 describe("Exercice4", () => {
 
