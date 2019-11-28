@@ -14,9 +14,9 @@
 - [EggHead](https://egghead.io/browse/libraries/rxjs) : Plein de super cours (need: acces payant)
 
 
-## Exercices
+## Instructions
 
-### Instructions
+Tous ces exercices sont à faire en utilisant RxJS 6.
 
 1) yarn install
 2) faites les exercices decrits dans exercices/*.js
@@ -29,8 +29,12 @@ Si vous voulez executer le test pour un exercice en particuler :
 
 Pour soumettre vos résultats, créez une branche à votre nom, faites une PR et mettez moi en reviewer :-)
 
+Soyez fair play et ne regardez pas les autres branches.
 
-### Liste des exercices
+L'un des objectifs de ces exercices est que vous soyez à l'aise avec la doc RxJS et que vous sachiez trouver dedans les opérateurs qui correspondent le mieux à votre problématique. Alors ne divulgâchez rien :-) 
+
+
+## Liste des exercices
 
 - **ex1** : Generateurs et filtres
 - **ex2** : Comment élaguer un observable
@@ -38,10 +42,12 @@ Pour soumettre vos résultats, créez une branche à votre nom, faites une PR et
 - **ex4** : Aggregation de résultats
 - **ex5** : Rate limiting
 - **ex6** : Gestion des erreurs
+- **ex7** : Executer des actions en parallèle
 
 ### TODO
 
-- **ex7** : Executer des actions en parallèle
+- **ex8** : surveiller plusieurs observables en même temps
+- **ex9** : retry incremental avec timeout
 
 
 
