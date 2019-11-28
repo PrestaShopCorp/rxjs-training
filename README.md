@@ -44,11 +44,12 @@ L'un des objectifs de ces exercices est que vous soyez à l'aise avec la doc RxJ
 - **ex6** : Gestion des erreurs
 - **ex7** : Executer des actions en parallèle
 - **ex8** : Surveiller plusieurs observables en même temps
+- **ex9** : retry incremental avec timeout
 
 ### TODO
 
 - **ex8 - tests unitaires** 
-- **ex9** : retry incremental avec timeout
+- **ex9 - tests unitaires**
 
 
 
