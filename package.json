@@ -16,6 +16,6 @@
     "test": "jest tests"
   },
   "jest": {
-    "verbose": false
+    "verbose": true
   }
 }
