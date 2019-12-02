@@ -28,8 +28,7 @@ class Exercice8 {
         this.atomicClockService = atomicClockService;
     }
 
-    initDisplay() {
-
+    updateDisplay() {
         // TODO: Fix this function !
 
     };
