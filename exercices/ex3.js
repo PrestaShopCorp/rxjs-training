@@ -1,3 +1,5 @@
+const { from } = require("rxjs");
+const { filter, map, concatAll } = require("rxjs/operators");
 
 /**
  * Exercice 3
@@ -27,18 +29,19 @@
  */
 
 class Exercice3 {
+  constructor(githubService) {
+    this.githubService = githubService;
+  }
 
-    constructor(githubService) {
-        this.githubService = githubService;
-    }
-
-    ex3(githubUser) {
-        // TODO: Fix this function !
-        return this.githubService.getUserRepos(githubUser);
-    };
-
+  ex3(githubUser) {
+    // TODO: Fix this function !
+    return this.githubService.getUserRepos(githubUser).pipe(
+      map(user => from(user)),
+      concatAll(),
+      filter(repo => repo.fork === false),
+      map(repo => repo.html_url),
+    );
+  }
 }
-
-
 
 module.exports = Exercice3;

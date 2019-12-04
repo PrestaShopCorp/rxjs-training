@@ -1,3 +1,5 @@
+const { from } = require("rxjs");
+const { filter, map, concatAll, tap } = require("rxjs/operators");
 
 /**
  * Exercice 4
@@ -58,18 +60,22 @@
  */
 
 class Exercice4 {
+  constructor(githubService) {
+    this.githubService = githubService;
+  }
 
-    constructor(githubService) {
-        this.githubService = githubService;
-    }
+  topContributors(organization) {
+    // TODO: Fix this function !
+    return this.githubService.getOrgRepos(organization).pipe(
+      tap(org => {
+        console.log(this.githubService.getRepoContributors("staltz/ams"));
+      }),
+      map(repo => this.githubService.getRepoContributors(repo.full_name)),
 
-    topContributors(organization) {
-        // TODO: Fix this function !
-        return this.githubService.getOrgRepos(organization);
-    };
-
+      concatAll(),
+      tap(org => console.log(org)),
+    );
+  }
 }
-
-
 
 module.exports = Exercice4;

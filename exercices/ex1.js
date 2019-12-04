@@ -1,4 +1,5 @@
-const {of} = require("rxjs");
+const { range } = require("rxjs");
+const { filter } = require("rxjs/operators");
 
 /**
  * Exercice 1
@@ -10,8 +11,7 @@ const {of} = require("rxjs");
  */
 
 const ex1 = () => {
-    // TODO: Fix this function !
+  return range(100, 4900).pipe(filter(num => num % 42 == 0));
 };
 
-
-module.exports = {ex1};
+module.exports = { ex1 };
