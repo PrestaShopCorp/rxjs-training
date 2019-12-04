@@ -1,4 +1,5 @@
-
+const { of, from } = require("rxjs");
+const { flatMap, retry, catchError } = require("rxjs/operators");
 /**
  * Exercice 6
  * ----------
@@ -55,19 +56,19 @@
  */
 
 class Exercice6 {
+  constructor(immoService) {
+    this.immoService = immoService;
+  }
 
-    constructor(immoService) {
-        this.immoService = immoService;
-    }
-
-    estimateWithRetry(addresses) {
-
-        // TODO: Fix this function !
-
-    };
-
+  estimateWithRetry(addresses) {
+    // TODO: Fix this function !
+    return from(addresses).pipe(
+      flatMap(addresse => this.immoService.estmate(address)).pipe(
+        retry(3),
+        flatMap(estimation => of({ address, estimation })),
+      ),
+    );
+  }
 }
-
-
 
 module.exports = Exercice6;

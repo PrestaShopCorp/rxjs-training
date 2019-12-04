@@ -1,3 +1,5 @@
+const { from, concat } = require("rxjs");
+const { flatMap, pluck, delay } = require("rxjs/operators");
 
 /**
  * Exercice 5
@@ -50,19 +52,21 @@
  */
 
 class Exercice5 {
+  constructor(searchService) {
+    this.searchService = searchService;
+  }
 
-    constructor(searchService) {
-        this.searchService = searchService;
-    }
-
-    scrapSerp(keyword) {
-
-        // TODO: Fix this function !
-        return this.searchService.search(keyword, 1);
-    };
-
+  scrapSerp(keyword) {
+    // TODO: Fix this function !
+    return concat(
+      this.searchService.search(keyword, 1).pipe(delay(100)),
+      this.searchService.search(keyword, 2).pipe(delay(100)),
+      this.searchService.search(keyword, 3).pipe(delay(100)),
+    ).pipe(
+      flatMap(results => from(results)),
+      pluck("url"),
+    );
+  }
 }
-
-
 
 module.exports = Exercice5;
