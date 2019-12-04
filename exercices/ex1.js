@@ -1,4 +1,3 @@
-const {of} = require("rxjs");
 
 /**
  * Exercice 1
@@ -10,7 +9,17 @@ const {of} = require("rxjs");
  */
 
 const ex1 = () => {
-    // TODO: Fix this function !
+
+    const {range} = require("rxjs");
+    const {filter} = require('rxjs/operators');
+
+    // Generate a sequence from 100 to 5000s
+    return range(100, 4901)
+        .pipe(
+            // Keep only values divisible by 42
+            filter(n => n % 42 === 0)
+        );
+
 };
 
 

@@ -29,8 +29,19 @@ class Exercice8 {
     }
 
     updateDisplay() {
-        // TODO: Fix this function !
 
+
+        const rx = require('rxjs');
+        const {map, distinct, tap} = require('rxjs/operators');
+        return rx.combineLatest([
+            this.gpsService.getCurrentLocation().pipe(map(l => l.city_name)),
+            this.weatherService.watchTemperature().pipe( map(t => `${t.temp}°${t.unit}`)),
+            this.atomicClockService.watchTime().pipe(map(o => `${o.hour}:${o.minute}`)),
+        ])
+            .pipe(
+                map(([location, temp, time]) => `${location} - ${temp} - ${time}`),
+                distinct(),
+            )
     };
 
 }

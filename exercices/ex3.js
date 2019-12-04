@@ -1,4 +1,5 @@
 
+
 /**
  * Exercice 3
  * ----------
@@ -33,8 +34,18 @@ class Exercice3 {
     }
 
     ex3(githubUser) {
-        // TODO: Fix this function !
-        return this.githubService.getUserRepos(githubUser);
+        const {from} = require('rxjs');
+        const {flatMap, map, filter} = require('rxjs/operators');
+
+        return this.githubService.getUserRepos(githubUser)
+            .pipe(
+                // Emit a value for each repository
+                flatMap(repos => from(repos)),
+                // Ignore repository having fork: true
+                filter(repo => !repo.fork),
+                // Extract html_url attribute from each repository
+                map(repo => repo.html_url),
+            );
     };
 
 }

@@ -87,7 +87,16 @@ class Exercice7 {
 
     initDisplay() {
 
-        // TODO: Fix this function !
+        const rx = require('rxjs');
+        const {take, map} = require('rxjs/operators');
+        
+        return rx.forkJoin({
+            time: this.atomicClockService.watchTime().pipe(take(1)),
+            weather: this.weatherService.watchTemperature().pipe(take(1)),
+            location: this.gpsService.getCurrentLocation()
+        }).pipe(
+            map(({time, weather, location}) => `${location.city_name} - ${weather.temp}°${weather.unit} - ${time.hour}:${time.minute}`)
+        );
 
     };
 

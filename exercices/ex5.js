@@ -55,10 +55,77 @@ class Exercice5 {
         this.searchService = searchService;
     }
 
+    /*
+     * One possible implementation with "timer"
+     */
     scrapSerp(keyword) {
 
-        // TODO: Fix this function !
-        return this.searchService.search(keyword, 1);
+        const rx = require('rxjs');
+        const {map, flatMap, take} = require('rxjs/operators');
+
+        return rx.timer(0, 100)
+            .pipe(
+                take(3),
+                flatMap(i => this.searchService.search(keyword, i + 1)),
+                flatMap(results => rx.from(results)),
+                map(result => result.url),
+            );
+    }
+
+    /*
+     * Another implementation with interval + startWith()
+     * (startWith to avoid a delay before the first request)
+     */
+
+    scrapSerpInterval(keyword) {
+
+        const rx = require('rxjs');
+        const {map, take, flatMap, tap, startWith} = require('rxjs/operators');
+
+        return rx.interval(110)
+            .pipe(
+                take(2),
+                map(i => i + 1),
+                startWith(0),
+                flatMap(i => this.searchService.search(keyword, i + 1)),
+                flatMap(results => rx.from(results)),
+                map(result => result.url),
+            );
+    }
+
+
+    /*
+     * Another implementation with map + concatAll
+     */
+
+    scrapSerpConcatAll(keyword) {
+
+        const rx = require('rxjs');
+        const {map, flatMap, delay, concatAll} = require('rxjs/operators');
+
+        // Generate an observable emitting a value for each page number to scrap
+        return rx.range(1, 3)
+            .pipe(
+                // Prepare the request to execute for each page
+                map(page => rx.defer(() => this.searchService.search(keyword, page)
+                    .pipe(
+                        // Add a delay of 100ms after each call
+                        delay(100)
+                    )
+                )),
+                // At this point, we have an observable containing observables.
+                // Each of the observable is materializing the request to execute.
+                // But since nothing is subscribed to them, they are not executed yet.s
+                //
+                // We use the concatMap operator to execute them sequentially :
+                // (the first one is executed, and the next one is executed only when the previous is completed)
+                // All resulting values are emitted on the resulting observable.
+                concatAll(),
+                // For each page, we extract the results to emit one value per result.
+                flatMap(results => rx.from(results)),
+                // We extract the url of each value
+                map(result => result.url),
+            );
     };
 
 }

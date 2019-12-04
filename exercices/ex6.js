@@ -62,8 +62,22 @@ class Exercice6 {
 
     estimateWithRetry(addresses) {
 
-        // TODO: Fix this function !
+        const rx = require('rxjs');
+        const {map, flatMap, retry, tap, catchError} = require('rxjs/operators');
 
+        return rx.from(addresses)
+            .pipe(
+                flatMap(address => {
+                    return rx.defer(() => this.immoService.estimate(address))
+                        .pipe(
+                            retry(3),
+                            map(estimation => {
+                                return {address, estimation}
+                            }),
+                            catchError((err) => rx.EMPTY),
+                        )
+                }),
+            );
     };
 
 }
