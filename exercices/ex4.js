@@ -57,19 +57,78 @@
  *
  */
 
+const {of, from, forkJoin} = require('rxjs');
+const {flatMap, tap, reduce, pluck} = require('rxjs/operators');
+
 class Exercice4 {
 
-    constructor(githubService) {
-        this.githubService = githubService;
-    }
+  constructor(githubService) {
+    this.githubService = githubService;
+  }
 
-    topContributors(organization) {
-        // TODO: Fix this function !
-        return this.githubService.getOrgRepos(organization);
-    };
-
+  // topContributors(organization) {
+  //   const contributors = [];
+  //   return this.githubService.getOrgRepos(organization)
+  //   .pipe(
+  //     flatMap(repos => from(repos)
+  //       .pipe(
+  //         flatMap(repo => this.githubService.getRepoContributors(repo.full_name)),
+  //         flatMap(users => from(users)),
+  //         tap(user => {
+  //           if (!contributors[user.login]) {
+  //             contributors[user.login] = {
+  //               login: user.login,
+  //               contributions: 0,
+  //             };
+  //           }
+  //           contributors[user.login].contributions += user.contributions;
+  //         }),
+  //       )
+  //     ),
+  //     flatMap(user => {
+  //       return of(contributors);
+  //     })
+  //   )
+  // }
+  
+  // topContributors(organization) {
+  //   const contributors = [];
+  //   return this.githubService.getOrgRepos(organization)
+  //   .pipe(
+  //     flatMap(repos => from(repos)
+  //     .pipe(
+  //       flatMap(repo => forkJoin(this.githubService.getRepoContributors(repo.full_name))),
+  //       flatMap(users => from(users)),
+  //       tap(user => {
+  //         user.map(contrib => {
+  //           if (!contributors[contrib.login]) {
+  //             contributors[contrib.login] = {
+  //               login: user.login,
+  //               contributions: 0,
+  //             };
+  //           }
+  //           contributors[user.login].contributions += user.contributions;
+  //         });
+  //       }),
+  //     )),
+  //     flatMap(_ => {
+  //       console.log('done');
+  //       return of(null);
+  //     })
+  //   )
+  // }
+  
+  topContributors(organization) {
+    return from(this.githubService.getOrgRepos(organization))
+    .pipe(
+      flatMap(repos => {
+        return from(repos)
+        .pipe()
+        
+      })
+    );
+  }
+  
 }
-
-
 
 module.exports = Exercice4;

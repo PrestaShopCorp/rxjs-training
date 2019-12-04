@@ -1,4 +1,5 @@
-const {of} = require("rxjs");
+const {of, range, EMPTY} = require('rxjs');
+const {flatMap} = require('rxjs/operators');
 
 /**
  * Exercice 1
@@ -10,8 +11,10 @@ const {of} = require("rxjs");
  */
 
 const ex1 = () => {
-    // TODO: Fix this function !
+  return range(100, 4900)
+  .pipe(
+    flatMap(number => number % 42 ? EMPTY : of(number))
+  )
 };
-
 
 module.exports = {ex1};

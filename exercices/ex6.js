@@ -54,20 +54,29 @@
  *
  */
 
+const {of, from, EMPTY} = require('rxjs');
+const {flatMap, retry, catchError} = require('rxjs/operators');
+
 class Exercice6 {
 
-    constructor(immoService) {
-        this.immoService = immoService;
-    }
+  constructor(immoService) {
+    this.immoService = immoService;
+  }
 
-    estimateWithRetry(addresses) {
-
-        // TODO: Fix this function !
-
-    };
+  estimateWithRetry(addresses) {
+    return from(addresses)
+      .pipe(
+        flatMap(address =>
+          this.immoService.estimate(address)
+          .pipe(
+            retry(3),
+            flatMap(estimation => of({address, estimation})),
+            catchError(() => EMPTY),
+          )
+        )
+    );
+  }
 
 }
-
-
 
 module.exports = Exercice6;

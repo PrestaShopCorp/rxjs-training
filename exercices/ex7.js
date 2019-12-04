@@ -77,19 +77,26 @@
  *
  */
 
+const {of, zip} = require('rxjs');
+const {flatMap} = require('rxjs/operators');
+
 class Exercice7 {
 
-    constructor(gpsService, weatherService, atomicClockService) {
-        this.gpsService = gpsService;
-        this.weatherService = weatherService;
-        this.atomicClockService = atomicClockService;
-    }
+  constructor(gpsService, weatherService, atomicClockService) {
+    this.gpsService = gpsService;
+    this.weatherService = weatherService;
+    this.atomicClockService = atomicClockService;
+  }
 
-    initDisplay() {
-
-        // TODO: Fix this function !
-
-    };
+  initDisplay() {
+    return zip(
+      this.gpsService.getCurrentLocation(),
+      this.weatherService.watchTemperature(),
+      this.atomicClockService.watchTime(),
+    ).pipe(
+      flatMap(data => of(`${data[0].city_name} - ${data[1].temp}°${data[1].unit} - ${data[2].hour}:${data[2].minute}`)),
+    );
+  };
 
 }
 
