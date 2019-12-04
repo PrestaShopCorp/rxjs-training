@@ -1,4 +1,4 @@
-
+const {skip, skipLast, takeWhile} = require('rxjs/operators');
 /**
  * Exercice 2
  * ----------
@@ -27,9 +27,12 @@
  */
 
 const ex2 = (input$) => {
-
-    // TODO: Fix this function !
-
+  return input$
+  .pipe(
+    skip(3),
+    skipLast(4),
+    takeWhile(ev => ev != 'STOP')
+  )
 };
 
 

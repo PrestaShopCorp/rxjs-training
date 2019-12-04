@@ -20,18 +20,26 @@
  *
  */
 
+const {of, combineLatest} = require('rxjs');
+const {flatMap, distinct} = require('rxjs/operators');
+
 class Exercice8 {
+  constructor(gpsService, weatherService, atomicClockService) {
+    this.gpsService = gpsService;
+    this.weatherService = weatherService;
+    this.atomicClockService = atomicClockService;
+  }
 
-    constructor(gpsService, weatherService, atomicClockService) {
-        this.gpsService = gpsService;
-        this.weatherService = weatherService;
-        this.atomicClockService = atomicClockService;
-    }
-
-    updateDisplay() {
-        // TODO: Fix this function !
-
-    };
+  updateDisplay() {
+    return combineLatest(
+      this.gpsService.getCurrentLocation(),
+      this.weatherService.watchTemperature(),
+      this.atomicClockService.watchTime(),
+    ).pipe(
+      flatMap(data => of(`${data[0].city_name} - ${data[1].temp}°${data[1].unit} - ${data[2].hour}:${data[2].minute}`)),
+      distinct(),
+    );
+  };
 
 }
 
