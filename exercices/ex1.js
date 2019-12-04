@@ -1,6 +1,3 @@
-const { generate } = require("rxjs");
-const { filter } = require('rxjs/operators');
-
 /**
  * Exercice 1
  * ----------
@@ -9,6 +6,9 @@ const { filter } = require('rxjs/operators');
  * compris entre 100 et 5000 qui sont divisibles par 42.
  *
  */
+
+const { generate } = require("rxjs");
+const { filter } = require('rxjs/operators');
 
 const ex1 = () => {
     return generate(100, x => x < 5000, x => x + 1)

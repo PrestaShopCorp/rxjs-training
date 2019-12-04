@@ -1,5 +1,3 @@
-const { skip, skipLast, takeWhile } = require('rxjs/operators');
-
 /**
  * Exercice 2
  * ----------
@@ -26,6 +24,8 @@ const { skip, skipLast, takeWhile } = require('rxjs/operators');
  *
  *
  */
+
+const { skip, skipLast, takeWhile } = require('rxjs/operators');
 
 const ex2 = (input$) => {
     return input$.pipe(

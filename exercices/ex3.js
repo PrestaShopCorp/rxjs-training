@@ -1,4 +1,3 @@
-
 /**
  * Exercice 3
  * ----------
@@ -26,6 +25,9 @@
  *
  */
 
+const { from } = require('rxjs');
+const { flatMap } = require('rxjs/operators');
+
 class Exercice3 {
 
     constructor(githubService) {
@@ -34,9 +36,20 @@ class Exercice3 {
 
     ex3(githubUser) {
         // TODO: Fix this function !
-        return this.githubService.getUserRepos(githubUser);
-    };
+        const output = [];
 
+       return this.githubService.getUserRepos(githubUser).pipe(
+            flatMap((val) => {
+                val.forEach((item, index) => {
+                    if (false === item.fork) {
+                        output.push(item.html_url)
+                    }
+                });
+
+                return from(output);
+            }),
+        )
+    };
 }
 
 

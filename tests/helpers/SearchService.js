@@ -21,9 +21,10 @@ class SearchService {
                         url: "https://www.prestashop.com/forums/",
                     },
                 ],
+
                 2: [
                     {
-                        title: "PrestaShop - Wikipedia",
+                        title: "PrestaShop - Wikipedia", 
                         url: "https://en.wikipedia.org/wiki/PrestaShop",
                     },
                     {

@@ -1,4 +1,3 @@
-
 /**
  * Exercice 4
  * ----------
@@ -57,6 +56,9 @@
  *
  */
 
+const { flatMap } = require('rxjs/operators');
+const { from } = require("rxjs");
+
 class Exercice4 {
 
     constructor(githubService) {
@@ -65,7 +67,33 @@ class Exercice4 {
 
     topContributors(organization) {
         // TODO: Fix this function !
-        return this.githubService.getOrgRepos(organization);
+        const output = [];
+        const orgRepos = this.githubService.getOrgRepos(organization);
+         orgRepos.pipe(
+            flatMap((val) => {
+                val.forEach((item, index) => {
+                    this.githubService.getRepoContributors(item.full_name).pipe(
+                        flatMap((repoContributors) => {
+                            repoContributors.forEach((contributors) => {
+                                if(contributors.id in output){
+                                    output[contributors.id] = { login: contributors.login, contributions: output[contributors.id]+contributors.contributions}
+                                }else{
+                                    output[contributors.id] = { login: contributors.login, contributions: contributors.contributions}
+                                }
+                            })
+                            return repoContributors;  
+                        })
+                    ).subscribe()
+                })
+
+                return val
+            })
+        ).subscribe ();
+
+        output.sort(function (a, b) {
+            return b.contributions - a.contributions;
+          });
+        return from(output.slice(0,10));
     };
 
 }
