@@ -49,21 +49,27 @@
  *
  */
 
-class Exercice8 {
+const {retryWhen, tap, delay, timeout} = require('rxjs/operators');
 
-    constructor(ticketingService) {
-        this.ticketingService = ticketingService;
-    }
+class Exercice9 {
+  constructor(ticketingService) {
+    this.ticketingService = ticketingService;
+  }
 
-    buyTicketWithRetry(concertId) {
-        
-        // TODO: Fix this function !
-        return this.ticketingService.buyTicket(concertId);
-
-    };
+  buyTicketWithRetry(concertId) {
+    this.retry = 0;
+    return this.ticketingService.buyTicket(concertId)
+    .pipe(
+      retryWhen(errors => errors.pipe(
+        tap(this.retry++),
+        delay(100 + this.retry*50),
+      )),
+      timeout(3000),
+    )
+  };
 
 }
 
 
 
-module.exports = Exercice8;
+module.exports = Exercice9;
