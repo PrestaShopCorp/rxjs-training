@@ -1,3 +1,5 @@
+const { combineLatest } = require('rxjs');
+const { map, take } = require('rxjs/operators');
 
 /**
  * Exercice 7
@@ -86,13 +88,29 @@ class Exercice7 {
     }
 
     initDisplay() {
+        // 1. this.gpsService.getCurrentLocation(); -> 1 valeur {city_name: "Paris", country: "France"} en 42ms, puis complete
+        // 2. this.weatherService.watchTemperature() -> n valeurs {unit: 'C', temp: 25}, async, never complete. 1st 50ms
+        // 3. this.atomicClockService.watchTime() -> 1 valeur {hour: 16, minute: 32, second: 50, timezone: "Europe/Paris"} par minute, async, never complete, 1st 50ms
+        // emettre 1 seule valeur à chaque update: "{city_name} - {temp}°{unit} - {hour}:{minute}" < 90ms
 
-        // TODO: Fix this function !
+        // paralléliser 1., 2., 3.
+        // 1. ne renvoie qu'au début, il faudra donc garder la valeur dans le temps et l'associer aux autres valeurs de 2. et 3.
+        // dès que 2. ou 3. emettent une valeur, il faut emettre notre update avec les dernières valeurs de chaque source : combineLatest.
 
+        return combineLatest(
+            //concat(this.gpsService.getCurrentLocation(), NEVER), // after first value of the gps service, must keep an observable that never complete? NO NEED !
+            this.gpsService.getCurrentLocation(),
+            this.weatherService.watchTemperature(),
+            this.atomicClockService.watchTime()
+        ).pipe(
+            map(([location, temperature, time]) => `${location.city_name} - ${temperature.temp}°${temperature.unit} - ${time.hour}:${time.minute}`),
+            take(1)
+        );
+
+        // FIXME: bon, dans l'exo7 j'ai déjà codé l'exo8, j'avais pas compris que ct uniquement l'init en 7 et update en 8... Pourquoi avoir séparé les 2 ?
+        // => pour utiliser en 7 un autre operator... a trouver !
     };
 
 }
-
-
 
 module.exports = Exercice7;

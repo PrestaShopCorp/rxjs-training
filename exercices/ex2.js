@@ -1,3 +1,4 @@
+const { skip, skipLast, takeWhile } = require('rxjs/operators');
 
 /**
  * Exercice 2
@@ -27,10 +28,13 @@
  */
 
 const ex2 = (input$) => {
-
-    // TODO: Fix this function !
-
+    /*return input$
+        .pipe(skip(3))
+        .pipe(skipLast(4))
+        .pipe(takeWhile(x => x !== 'STOP'))*/
+    return input$
+        .pipe(skip(3), skipLast(4), takeWhile(x => x !== 'STOP'))
 };
 
 
-module.exports = {ex2};
+module.exports = { ex2 };

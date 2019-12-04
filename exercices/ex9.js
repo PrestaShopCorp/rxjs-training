@@ -1,4 +1,5 @@
-
+const { throwError, of, timer } = require('rxjs');
+const { catchError, retry, timeoutWith, tap, mergeMap, delay, map } = require('rxjs/operators');
 /**
  * Exercice 9
  * ----------
@@ -56,10 +57,23 @@ class Exercice8 {
     }
 
     buyTicketWithRetry(concertId) {
-        
-        // TODO: Fix this function !
-        return this.ticketingService.buyTicket(concertId);
-
+        let retryDelay = 50;
+        return this.ticketingService.buyTicket(concertId).pipe(
+            catchError((error, caught) => {
+                if (error.message === 'Invalid concertId') {
+                    throw error;
+                }
+                retryDelay += 50;
+                return timer(retryDelay).pipe(mergeMap(i => caught)); // FIXME: pas trouvé
+            }),
+            mergeMap(v => {
+                if (v === 'Invalid concertId') {
+                    return throwError(new Error(v));
+                }
+                return v;
+            }),
+            timeoutWith(3000, throwError(new Error('Timeout')))
+        );
     };
 
 }

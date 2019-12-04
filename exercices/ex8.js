@@ -1,3 +1,5 @@
+const { combineLatest } = require('rxjs');
+const { map, distinct } = require('rxjs/operators');
 
 /**
  * Exercice 8
@@ -29,12 +31,16 @@ class Exercice8 {
     }
 
     updateDisplay() {
-        // TODO: Fix this function !
-
+        return combineLatest(
+            //concat(this.gpsService.getCurrentLocation(), NEVER), // after first value of the gps service, must keep an observable that never complete? NO NEED !
+            this.gpsService.getCurrentLocation(),
+            this.weatherService.watchTemperature(),
+            this.atomicClockService.watchTime()
+        ).pipe(
+            map(([location, temperature, time]) => `${location.city_name} - ${temperature.temp}°${temperature.unit} - ${time.hour}:${time.minute}`),
+            distinct()
+        );
     };
-
 }
-
-
 
 module.exports = Exercice8;

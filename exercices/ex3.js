@@ -1,3 +1,5 @@
+const { from } = require('rxjs');
+const { flatMap, filter, map } = require('rxjs/operators');
 
 /**
  * Exercice 3
@@ -33,12 +35,13 @@ class Exercice3 {
     }
 
     ex3(githubUser) {
-        // TODO: Fix this function !
-        return this.githubService.getUserRepos(githubUser);
+        return this.githubService.getUserRepos(githubUser).pipe(
+            flatMap(values => from(values)),
+            filter(repository => !repository.fork),
+            map(repository => repository.html_url)
+        )
     };
 
 }
-
-
 
 module.exports = Exercice3;

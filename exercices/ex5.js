@@ -1,3 +1,5 @@
+const { timer, from } = require('rxjs');
+const { concatMap, map, take } = require('rxjs/operators');
 
 /**
  * Exercice 5
@@ -56,13 +58,15 @@ class Exercice5 {
     }
 
     scrapSerp(keyword) {
-
-        // TODO: Fix this function !
-        return this.searchService.search(keyword, 1);
+        return timer(42, 101).pipe(
+            take(3),
+            map(x => x + 1),
+            concatMap(x => this.searchService.search(keyword, x)),
+            concatMap(res => from(res)),
+            map(r => r.url)
+        );
     };
 
 }
-
-
 
 module.exports = Exercice5;
