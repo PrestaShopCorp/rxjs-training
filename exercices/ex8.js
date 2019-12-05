@@ -33,13 +33,16 @@ class Exercice8 {
 
         const rx = require('rxjs');
         const {map, distinct, tap} = require('rxjs/operators');
+        // See documentation of combineLatest, it is a very useful operator to monitor multiple observables !
         return rx.combineLatest([
             this.gpsService.getCurrentLocation().pipe(map(l => l.city_name)),
             this.weatherService.watchTemperature().pipe( map(t => `${t.temp}°${t.unit}`)),
             this.atomicClockService.watchTime().pipe(map(o => `${o.hour}:${o.minute}`)),
         ])
             .pipe(
+                // Format the result
                 map(([location, temp, time]) => `${location} - ${temp} - ${time}`),
+                // Emit a result only when the value to display changes
                 distinct(),
             )
     };

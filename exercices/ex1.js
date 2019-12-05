@@ -13,7 +13,7 @@ const ex1 = () => {
     const {range} = require("rxjs");
     const {filter} = require('rxjs/operators');
 
-    // Generate a sequence from 100 to 5000s
+    // Generate a sequence from 100 to 5000
     return range(100, 4901)
         .pipe(
             // Keep only values divisible by 42
