@@ -66,14 +66,14 @@ class Exercice4 {
     topContributors(organization) {
 
         const rx = require('rxjs');
-        const {flatMap, groupBy, map, toArray, reduce, take} = require('rxjs/operators');
+        const {flatMap, pluck, groupBy, map, toArray, reduce, take} = require('rxjs/operators');
 
         return this.githubService.getOrgRepos(organization)
             .pipe(
                 // Emit a value for each repository
                 flatMap(repos => rx.from(repos)),
                 // Get the repo full name of each repo
-                map(repo => repo.full_name),
+                pluck('full_name'),
                 // Get the contributors for each repo
                 flatMap(repoFullName => this.githubService.getRepoContributors(repoFullName)),
                 // Emit a value for each contributor

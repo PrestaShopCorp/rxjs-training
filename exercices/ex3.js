@@ -35,7 +35,7 @@ class Exercice3 {
 
     ex3(githubUser) {
         const {from} = require('rxjs');
-        const {flatMap, map, filter} = require('rxjs/operators');
+        const {flatMap, pluck, filter} = require('rxjs/operators');
 
         return this.githubService.getUserRepos(githubUser)
             .pipe(
@@ -44,7 +44,7 @@ class Exercice3 {
                 // Ignore repository having fork: true
                 filter(repo => !repo.fork),
                 // Extract html_url attribute from each repository
-                map(repo => repo.html_url),
+                pluck('html_url'),
             );
     };
 
