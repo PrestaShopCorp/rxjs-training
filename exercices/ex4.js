@@ -66,7 +66,7 @@ class Exercice4 {
     topContributors(organization) {
 
         const rx = require('rxjs');
-        const {flatMap, tap, map, reduce, take} = require('rxjs/operators');
+        const {flatMap, groupBy, map, toArray, reduce, take} = require('rxjs/operators');
 
         return this.githubService.getOrgRepos(organization)
             .pipe(
@@ -80,20 +80,16 @@ class Exercice4 {
                 flatMap(contributors => rx.from(contributors)),
                 // Extract the login and the number of contributions
                 map(({login, contributions}) => { return {login, contributions} }),
-                // Aggregate all the values into a map, to add contributions for each login
-                reduce((acc, curr) => {
-                    if (!acc.has(curr.login)) {
-                        acc.set(curr.login, 0);
-                    }
-                    acc.set(curr.login, acc.get(curr.login) + curr.contributions);
-                    return acc;
-                }, new Map()),
-                flatMap(m => {
-                    // Transform the map into an array
-                    const contributors = Array.from(m).map(e => { return {login: e[0], contributions: e[1]}});
-                    // Sort the array by contributions, descending orders
+                // Group contributions by login
+                groupBy(c => c.login),
+                // Sum contributions for each contributor
+                flatMap(contributorStats$ => {
+                    return contributorStats$.pipe(reduce((acc, v) => ({...v, contributions: v.contributions + acc.contributions}), {contributions: 0}));
+                }),
+                // Sort
+                toArray(),
+                flatMap(contributors => {
                     contributors.sort((c1, c2) => c2.contributions - c1.contributions);
-                    // Return an observable emitting a value for each contributor
                     return rx.from(contributors);
                 }),
                 // Take only the first 10 values
