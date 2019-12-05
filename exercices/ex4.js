@@ -1,3 +1,6 @@
+const { from } = require('rxjs');
+const { flatMap, groupBy, map, reduce, take, toArray } = require('rxjs/operators');
+const _ = require('lodash');
 
 /**
  * Exercice 4
@@ -64,12 +67,27 @@ class Exercice4 {
     }
 
     topContributors(organization) {
-        // TODO: Fix this function !
-        return this.githubService.getOrgRepos(organization);
+        return this.githubService.getOrgRepos(organization).pipe(
+            flatMap(values => from(values)),
+            map(repository => repository.full_name),
+            flatMap(repoFullName => this.githubService.getRepoContributors(repoFullName)),
+            flatMap(contributors => from(contributors)), // one value emitted by repo and contributor
+            map(contributor => ({ login: contributor.login, contributions: contributor.contributions })),
+
+            // Group by contributor login, and sum contributions
+            groupBy(contributor => contributor.login, contributor => contributor.contributions),
+            flatMap(group$ => group$.pipe(reduce((acc, cur) => ({ login: acc.login, contributions: acc.contributions + cur }), { login: group$.key, contributions: 0 }))),
+
+            // order by contributions decreasing
+            toArray(),
+            flatMap(unsortedContributors => {
+                return from(_.sortBy(unsortedContributors, ['contributions']).reverse());
+            }),
+
+            take(10)
+        )
     };
 
 }
-
-
 
 module.exports = Exercice4;

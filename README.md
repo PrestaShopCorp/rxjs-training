@@ -11,7 +11,7 @@
 
 - [Learn RxJS](https://www.learnrxjs.io) : plein d'autres ressources sur RxJS
 
-- [EggHead](https://egghead.io/browse/libraries/rxjs) : Plein de super cours (need: acces payant)
+- [EggHead](https://egghead.io/browse/libraries/rxjs) : Plein de super cours (need: acces payant) <== un compte de groupe ? :D @chef-manager ?
 
 
 ## Instructions
@@ -31,7 +31,7 @@ Pour soumettre vos résultats, créez une branche à votre nom, faites une PR et
 
 Soyez fair play et ne regardez pas les autres branches.
 
-L'un des objectifs de ces exercices est que vous soyez à l'aise avec la doc RxJS et que vous sachiez trouver dedans les opérateurs qui correspondent le mieux à votre problématique. Alors ne divulgâchez rien :-) 
+L'un des objectifs de ces exercices est que vous soyez à l'aise avec la doc RxJS et que vous sachiez trouver dedans les opérateurs qui correspondent le mieux à votre problématique. Alors ne divulgâchez (terme très courant dans cette région de la France...) rien :-) 
 
 
 ## Liste des exercices

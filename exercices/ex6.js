@@ -1,3 +1,5 @@
+const { zip, of, from } = require('rxjs');
+const { flatMap, map, filter, retry, catchError } = require('rxjs/operators');
 
 /**
  * Exercice 6
@@ -61,13 +63,22 @@ class Exercice6 {
     }
 
     estimateWithRetry(addresses) {
-
-        // TODO: Fix this function !
-
+        return zip(
+            // address
+            from(addresses),
+            // estimation
+            from(addresses).pipe(
+                flatMap(address => this.immoService.estimate(address).pipe(
+                    retry(3),
+                    catchError(err => of(-1))
+                ))
+            )
+        ).pipe(
+            map(([address, estimation]) => ({ address, estimation })),
+            filter(i => i.estimation > -1)
+        )
     };
 
 }
-
-
 
 module.exports = Exercice6;
