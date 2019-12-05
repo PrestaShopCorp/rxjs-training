@@ -87,7 +87,23 @@ class Exercice7 {
 
     initDisplay() {
 
-        // TODO: Fix this function !
+        const rx = require('rxjs');
+        const {take, map} = require('rxjs/operators');
+
+        // Call the 3 actions in parallel
+        // Forkjoin will emit the last value of the 3 observables
+        // (in order to do that, they must all be completed !)
+        return rx.forkJoin({
+            // This observable emit only one value and complete
+            location: this.gpsService.getCurrentLocation(),
+            // This observable emit values endlessly, so we must force it to stop after the first value
+            time: this.atomicClockService.watchTime().pipe(take(1)),
+            // same here
+            weather: this.weatherService.watchTemperature().pipe(take(1)),
+        }).pipe(
+            // Format the result
+            map(({time, weather, location}) => `${location.city_name} - ${weather.temp}°${weather.unit} - ${time.hour}:${time.minute}`)
+        );
 
     };
 

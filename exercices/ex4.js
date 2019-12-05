@@ -64,8 +64,37 @@ class Exercice4 {
     }
 
     topContributors(organization) {
-        // TODO: Fix this function !
-        return this.githubService.getOrgRepos(organization);
+
+        const rx = require('rxjs');
+        const {flatMap, pluck, groupBy, map, toArray, reduce, take} = require('rxjs/operators');
+
+        return this.githubService.getOrgRepos(organization)
+            .pipe(
+                // Emit a value for each repository
+                flatMap(repos => rx.from(repos)),
+                // Get the repo full name of each repo
+                pluck('full_name'),
+                // Get the contributors for each repo
+                flatMap(repoFullName => this.githubService.getRepoContributors(repoFullName)),
+                // Emit a value for each contributor
+                flatMap(contributors => rx.from(contributors)),
+                // Extract the login and the number of contributions
+                map(({login, contributions}) => { return {login, contributions} }),
+                // Group contributions by login
+                groupBy(c => c.login),
+                // Sum contributions for each contributor
+                flatMap(contributorStats$ => {
+                    return contributorStats$.pipe(reduce((acc, v) => ({...v, contributions: v.contributions + acc.contributions}), {contributions: 0}));
+                }),
+                // Sort
+                toArray(),
+                flatMap(contributors => {
+                    contributors.sort((c1, c2) => c2.contributions - c1.contributions);
+                    return rx.from(contributors);
+                }),
+                // Take only the first 10 values
+                take(10),
+            );
     };
 
 }

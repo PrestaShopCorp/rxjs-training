@@ -62,8 +62,29 @@ class Exercice6 {
 
     estimateWithRetry(addresses) {
 
-        // TODO: Fix this function !
+        const rx = require('rxjs');
+        const {map, flatMap, retry, tap, catchError} = require('rxjs/operators');
 
+        // Create an observable from addresses array
+        return rx.from(addresses)
+            .pipe(
+                flatMap(address => {
+                    // Call the estimate API for each address
+                    return this.immoService.estimate(address)
+                        .pipe(
+                            // Retry 3 times max on error
+                            retry(3),
+                            // Format the object to return
+                            map(estimation => {
+                                return {address, estimation}
+                            }),
+                            // If an error occurs here, it means that we have retried 3 times and it still failed.
+                            // In this case, we intercept the error and replace it with an empty observable to
+                            // ignore it
+                            catchError((err) => rx.EMPTY),
+                        )
+                }),
+            );
     };
 
 }

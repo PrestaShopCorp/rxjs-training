@@ -27,9 +27,16 @@
  */
 
 const ex2 = (input$) => {
+    const {takeWhile, skip, skipLast} = require('rxjs/operators');
 
-    // TODO: Fix this function !
-
+    return input$.pipe(
+        // Ignore the first 3 entries
+        skip(3),
+        // Ignore the last 4 entries
+        skipLast(4),
+        // Continue while the emitted value is not 'STOP'
+        takeWhile(v => v !== 'STOP')
+    );
 };
 
 

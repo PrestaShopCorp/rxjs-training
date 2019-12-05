@@ -56,10 +56,22 @@ class Exercice8 {
     }
 
     buyTicketWithRetry(concertId) {
-        
-        // TODO: Fix this function !
-        return this.ticketingService.buyTicket(concertId);
-
+        const rx = require('rxjs');
+        const {retryWhen, tap, delay, zip, flatMap, map, retry, timeout} = require('rxjs/operators');
+        return this.ticketingService.buyTicket(concertId)
+            .pipe(
+                retryWhen((errors) => errors.pipe(
+                    zip(rx.range(0, 1000).pipe(map(n => 100 + n * 50))),
+                    flatMap(([e, d]) =>
+                    {
+                        if (e.message === 'Invalid concertId') {
+                            return rx.throwError(e);
+                        }
+                        return rx.of(e).pipe(delay(d));
+                    })
+                )),
+                timeout(3000)
+            );
     };
 
 }
