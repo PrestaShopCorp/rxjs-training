@@ -43,12 +43,9 @@
  *
  * output : ("http://example.pouet/")-("http://example2.pouet/")-("http://example3.pouet/")-("http://example4.pouet/")-[...]
  *
- *
- *
- *
  */
-const { from, range } = require("rxjs");
-const { delay, flatMap, concatMap } = require("rxjs/operators");
+const { range } = require("rxjs");
+const { delay, flatMap, concatAll, concatMap, pluck } = require("rxjs/operators");
 
 class Exercice5 {
   constructor(searchService) {
@@ -60,7 +57,17 @@ class Exercice5 {
       concatMap((page) =>
         this.searchService.search(keyword, page).pipe(delay(101))
       ),
-      flatMap((results) => from(results.map(res => res.url))),
+      concatAll(),
+      pluck('url'),
+    );
+  }
+
+  scrapSerpOptional(keyword) {
+    return range(1, 3).pipe(
+      concatMap((page) =>
+        this.searchService.search(keyword, page).pipe(delay(101))
+      ),
+      flatMap((results) => results.map(res => res.url)),
     );
   }
 }
