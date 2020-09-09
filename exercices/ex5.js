@@ -4,13 +4,13 @@
  *
  * Pour cet exercice, nous allons jouer avec une API de moteur de recherche.
  *
- * Cette api peut être intérrogée grâce à la méthode suivante :
+ * Cette api peut être interrogée grâce à la méthode suivante :
  * this.searchService.search(keyword, page)
  *
  * - keyword :  chaine de caractère correspondant au mot clé à rechercher
  * - page : nombre entier qui correspond au numéro de page (1ère page = 1)
  *
- * Cette methode renvoie un observable qui emmet un tableau de résultats sous la forme suivante :
+ * Cette methode renvoie un observable qui émet un tableau de résultats sous la forme suivante :
  *
  * [
  *  {title: "Titre de la page", url: "http://example.pouet/"},
@@ -33,8 +33,8 @@
  * de ce mot clé via l'API.
  *
  * L'observable renvoyé par cette fonction doit emettre une valeur par résultat du moteur de recherche.
- * Chaque valeur emise doit être une chaine de caractères qui correspond à l'URL du résultat.
- * Les valeurs doivent être emises en respectant l'ordre des résultats du moteur de recherche.
+ * Chaque valeur émise doit-être une chaîne de caractères qui correspond à l'URL du résultat.
+ * Les valeurs doivent être émises en respectant l'ordre des résultats du moteur de recherche.
  *
  *
  * Exemple :
@@ -47,6 +47,8 @@
  *
  *
  */
+const { from } = require("rxjs");
+const { tap, delay, flatMap, concatMap, map } = require("rxjs/operators");
 
 class Exercice5 {
   constructor(searchService) {
@@ -54,8 +56,14 @@ class Exercice5 {
   }
 
   scrapSerp(keyword) {
-    // TODO: Fix this function !
-    return this.searchService.search(keyword, 1);
+    const pages = [1, 2, 3];
+    return from(pages).pipe(
+      concatMap((page) =>
+        this.searchService.search(keyword, page).pipe(delay(101))
+      ),
+      flatMap((results) => from(results)),
+      map((result) => result.url)
+    );
   }
 }
 

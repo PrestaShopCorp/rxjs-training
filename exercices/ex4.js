@@ -55,13 +55,7 @@
  *
  *
  */
-const {
-  flatMap,
-  groupBy,
-  reduce,
-  toArray,
-  take,
-} = require("rxjs/operators");
+const { flatMap, groupBy, reduce, toArray, take } = require("rxjs/operators");
 
 class Exercice4 {
   constructor(githubService) {
@@ -85,7 +79,11 @@ class Exercice4 {
         )
       ),
       toArray(),
-      flatMap(contributors => contributors.sort((a, b) => (a.contributions < b.contributions ? 1 : -1))),
+      flatMap((contributors) =>
+        contributors.sort((a, b) =>
+          a.contributions < b.contributions ? 1 : -1
+        )
+      ),
       take(10)
     );
   }
