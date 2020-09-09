@@ -28,7 +28,7 @@
  *
  * Si la réservation réussit, l'observable doit émettre une seule valeur : la même chose que ce qu'a renvoyé l'API.s
  *
- * En cas d'erreur "Invalid concertId" renvoyée par l'API, votre Observable doit être un erreur avec cette même erreur.
+ * En cas d'erreur "Invalid concertId" renvoyée par l'API, votre Observable doit être une erreur avec cette même erreur.
  *
  * Si jamais une autre erreur se produit, vous devez réessayer d'appeler l'API un peu plus tard.
  * Les essais doivent se faire de manière incrémentale, en commençant à 100ms et en ajoutant 50ms à chaque fois.
@@ -41,22 +41,46 @@
  * -> Attente de 100ms puis 2eme tentative
  * -> Attente de 150ms puis 3e tentative
  * -> Attente de 200ms puis 4e tentative
- * -> Attente de 250ms puis 4e tentative
+ * -> Attente de 250ms puis 5e tentative
  * -> ...
  * -> Timeout au bout de 3 secondes
  *
  *
  */
+const { of, range, throwError } = require("rxjs");
+const {
+  retryWhen,
+  flatMap,
+  timeout,
+  delay,
+  map,
+  zip,
+} = require("rxjs/operators");
 
-class Exercice8 {
+class Exercice9 {
   constructor(ticketingService) {
     this.ticketingService = ticketingService;
   }
 
   buyTicketWithRetry(concertId) {
-    // TODO: Fix this function !
-    return this.ticketingService.buyTicket(concertId);
+    const delay$ = range(0, 1000).pipe(
+      map(attempt => 100 + attempt * 50),
+    );
+    return this.ticketingService.buyTicket(concertId).pipe(
+      retryWhen(errors =>
+        errors.pipe(
+          zip(delay$),
+          flatMap(([err, ms]) => {
+            if (err.message === 'Invalid concertId') {
+              return throwError(err);
+            }
+            return of(err).pipe(delay(ms));
+          })
+        )
+      ),
+      timeout(3_000)
+    );
   }
 }
 
-module.exports = Exercice8;
+module.exports = Exercice9;
