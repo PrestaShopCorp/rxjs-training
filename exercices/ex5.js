@@ -48,7 +48,7 @@
  *
  */
 const { from, range } = require("rxjs");
-const { delay, flatMap, concatMap, map } = require("rxjs/operators");
+const { delay, flatMap, concatMap } = require("rxjs/operators");
 
 class Exercice5 {
   constructor(searchService) {
@@ -60,8 +60,7 @@ class Exercice5 {
       concatMap((page) =>
         this.searchService.search(keyword, page).pipe(delay(101))
       ),
-      flatMap((results) => from(results)),
-      map((result) => result.url)
+      flatMap((results) => from(results.map(res => res.url))),
     );
   }
 }
