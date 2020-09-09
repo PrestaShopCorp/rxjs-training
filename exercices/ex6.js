@@ -50,15 +50,13 @@
  * output : ({address: "addresse1", estimation: 114171})-({adress: "adresse2", estimation: 272586})-({address: "adresse3", estimation: 401002})-|
  *
  */
-const { of, from, timer, empty } = require("rxjs");
+const { from, timer, empty } = require("rxjs");
 const {
-  tap,
   retryWhen,
   map,
   concatMap,
   mergeMap,
   catchError,
-  pluck,
 } = require("rxjs/operators");
 
 class Exercice6 {
