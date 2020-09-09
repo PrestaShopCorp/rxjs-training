@@ -8,7 +8,7 @@
  * qui n'est pas un fork. Les valeurs émises doivent correspondre à l'URL publique du repository (html_url
  * renvoyé par l'API).
  *
- * Pour réussir cela, devez utiliser la methode `this.githubService.getUserRepos(user)` qui simule un appel à l'API
+ * Pour réussir cela, vous devez utiliser la methode `this.githubService.getUserRepos(user)` qui simule un appel à l'API
  * github. Elle renvoie un Observable qui emmet l'objet JSON renvoyé par l'API.
  *
  * Pour avoir un vrai exemple de ce que renvoie l'API :
@@ -24,6 +24,8 @@
  * -("https://github.com/staltz/amicispace")-("https://github.com/staltz/ams")-("https://github.com/staltz/annankatu")- [...]
  *
  */
+const { of } = require('rxjs');
+const { flatMap } = require('rxjs/operators');
 
 class Exercice3 {
   constructor(githubService) {
@@ -31,9 +33,19 @@ class Exercice3 {
   }
 
   ex3(githubUser) {
-    // TODO: Fix this function !
-    return this.githubService.getUserRepos(githubUser);
+    return this.githubService.getUserRepos(githubUser)
+      .pipe(
+        flatMap(repos => {
+          return repos
+          .filter(repo => !repo.fork)
+          .map(repo => repo.html_url)
+        })
+      );
   }
 }
+
+// console.log(repo.length);
+//             // v[i].html_url, v[i].fork
+//           return repo;
 
 module.exports = Exercice3;
