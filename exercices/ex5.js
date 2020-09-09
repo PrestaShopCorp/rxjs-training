@@ -47,7 +47,7 @@
  *
  *
  */
-const { from } = require("rxjs");
+const { from, range } = require("rxjs");
 const { delay, flatMap, concatMap, map } = require("rxjs/operators");
 
 class Exercice5 {
@@ -56,8 +56,7 @@ class Exercice5 {
   }
 
   scrapSerp(keyword) {
-    const pages = [1, 2, 3];
-    return from(pages).pipe(
+    return range(1, 3).pipe(
       concatMap((page) =>
         this.searchService.search(keyword, page).pipe(delay(101))
       ),
