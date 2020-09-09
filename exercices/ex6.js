@@ -49,17 +49,51 @@
  *
  * output : ({address: "addresse1", estimation: 114171})-({adress: "adresse2", estimation: 272586})-({address: "adresse3", estimation: 401002})-|
  *
- *
- *
  */
+const { of, from, timer, empty } = require("rxjs");
+const {
+  tap,
+  retryWhen,
+  map,
+  concatMap,
+  mergeMap,
+  catchError,
+  pluck,
+} = require("rxjs/operators");
 
 class Exercice6 {
   constructor(immoService) {
     this.immoService = immoService;
   }
 
+  genericRetryStrategy({ maxRetryAttempts = 3, scalingDuration = 100 } = {}) {
+    return (attempts) => {
+      return attempts.pipe(
+        mergeMap((error, i) => {
+          const retryAttempt = i + 1;
+          if (retryAttempt > maxRetryAttempts) {
+            return throwError(error);
+          }
+          // console.log(`Attempt ${retryAttempt}: retrying in ${retryAttempt * scalingDuration}ms`);
+          return timer(retryAttempt * scalingDuration);
+        })
+      );
+    };
+  }
+
   estimateWithRetry(addresses) {
-    // TODO: Fix this function !
+    return from(addresses).pipe(
+      concatMap((address) => {
+        return this.immoService.estimate(address).pipe(
+          retryWhen(this.genericRetryStrategy()),
+          catchError((error) => {
+            // log.error(error);
+            return empty();
+          }),
+          map((estimation) => ({ estimation, address }))
+        );
+      })
+    );
   }
 }
 
