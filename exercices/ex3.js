@@ -24,8 +24,7 @@
  * -("https://github.com/staltz/amicispace")-("https://github.com/staltz/ams")-("https://github.com/staltz/annankatu")- [...]
  *
  */
-const { of } = require('rxjs');
-const { flatMap } = require('rxjs/operators');
+const { flatMap } = require("rxjs/operators");
 
 class Exercice3 {
   constructor(githubService) {
@@ -33,14 +32,11 @@ class Exercice3 {
   }
 
   ex3(githubUser) {
-    return this.githubService.getUserRepos(githubUser)
-      .pipe(
-        flatMap(repos => {
-          return repos
-          .filter(repo => !repo.fork)
-          .map(repo => repo.html_url)
-        })
-      );
+    return this.githubService.getUserRepos(githubUser).pipe(
+      flatMap((repos) => {
+        return repos.filter((repo) => !repo.fork).map((repo) => repo.html_url);
+      })
+    );
   }
 }
 

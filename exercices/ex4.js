@@ -55,6 +55,15 @@
  *
  *
  */
+const {
+  flatMap,
+  groupBy,
+  reduce,
+  toArray,
+  map,
+  concatAll,
+  take,
+} = require("rxjs/operators");
 
 class Exercice4 {
   constructor(githubService) {
@@ -62,8 +71,28 @@ class Exercice4 {
   }
 
   topContributors(organization) {
-    // TODO: Fix this function !
-    return this.githubService.getOrgRepos(organization);
+    return this.githubService.getOrgRepos(organization).pipe(
+      flatMap((repos) => repos.map((repo) => repo.full_name)),
+      flatMap((fullName) => this.githubService.getRepoContributors(fullName)),
+      flatMap((contribs) =>
+        contribs.map(({ login, contributions }) => ({ login, contributions }))
+      ),
+      groupBy((contributor) => contributor.login),
+      flatMap((group) =>
+        group.pipe(
+          reduce((acc, val) => ({
+            login: val.login,
+            contributions: acc.contributions + val.contributions,
+          }))
+        )
+      ),
+      toArray(),
+      map((arr) =>
+        arr.sort((a, b) => (a.contributions < b.contributions ? 1 : -1))
+      ),
+      concatAll(),
+      take(10)
+    );
   }
 }
 
