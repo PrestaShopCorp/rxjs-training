@@ -61,8 +61,8 @@
  *
  *
  *  Votre mission, si vous l'acceptez, sera de coder la methode *initDisplay*.
- *  Celle ci doit renvoyer un Observable qui emmet une seule valeur.
- *  Cette valeur est une chaine de caractère avec le format suivant :
+ *  Celle-ci doit renvoyer un Observable qui émet une seule valeur.
+ *  Cette valeur est une chaîne de caractères avec le format suivant :
  *
  *  "{city_name} - {temp}°{unit} - {hour}:{minute}"
  *
@@ -72,9 +72,8 @@
  *  Vous devez renvoyer cette chaîne le plus rapidement possible.
  *  Pour que ce panneau puisse être homologué «Military Grade», vous devez renvoyer la chaîne en moins de 90ms.
  *
- *
- *
  */
+const { combineLatest, take, map, pluck } = require('rxjs/operators');
 
 class Exercice7 {
   constructor(gpsService, weatherService, atomicClockService) {
@@ -84,7 +83,41 @@ class Exercice7 {
   }
 
   initDisplay() {
-    // TODO: Fix this function !
+    const position$ = this.gpsService.getCurrentLocation().pipe(
+      pluck('city_name')
+    );
+    const temperature$ = this.weatherService.watchTemperature().pipe(
+      map(data => `${data.temp}°${data.unit}`),
+      take(1),
+    );
+    const time$ = this.atomicClockService.watchTime().pipe(
+      map(data => `${data.hour}:${data.minute}`),
+      take(1),
+    )
+
+    return position$.pipe(
+      combineLatest(temperature$, time$),
+      map(measures => measures.join(' - ')),
+    )
+  }
+
+  // Alternative way of doing this
+  initDisplayAlt() {
+    return forkJoin({
+      time: this.atomicClockService.watchTime().pipe(
+        map(data => `${data.hour}:${data.minute}`),
+        take(1),
+      ),
+      temperature: this.weatherService.watchTemperature().pipe(
+        map(data => `${data.temp}°${data.unit}`),
+        take(1),
+      ),
+      position: this.gpsService.getCurrentLocation().pipe(
+        pluck('city_name')
+      ),
+    }).pipe(
+      map((measures) => [measures.position, measures.temperature, measures.time].join(' - ')),
+    )
   }
 }
 
