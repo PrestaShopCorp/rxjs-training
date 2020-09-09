@@ -73,7 +73,7 @@
  *  Pour que ce panneau puisse être homologué «Military Grade», vous devez renvoyer la chaîne en moins de 90ms.
  *
  */
-const { combineLatest, take, map, pluck } = require('rxjs/operators');
+const { combineLatest, take, map, pluck } = require("rxjs/operators");
 
 class Exercice7 {
   constructor(gpsService, weatherService, atomicClockService) {
@@ -83,41 +83,41 @@ class Exercice7 {
   }
 
   initDisplay() {
-    const position$ = this.gpsService.getCurrentLocation().pipe(
-      pluck('city_name')
-    );
+    const position$ = this.gpsService
+      .getCurrentLocation()
+      .pipe(pluck("city_name"));
     const temperature$ = this.weatherService.watchTemperature().pipe(
-      map(data => `${data.temp}°${data.unit}`),
-      take(1),
+      map((data) => `${data.temp}°${data.unit}`),
+      take(1)
     );
     const time$ = this.atomicClockService.watchTime().pipe(
-      map(data => `${data.hour}:${data.minute}`),
-      take(1),
-    )
+      map((data) => `${data.hour}:${data.minute}`),
+      take(1)
+    );
 
     return position$.pipe(
       combineLatest(temperature$, time$),
-      map(measures => measures.join(' - ')),
-    )
+      map((measures) => measures.join(" - "))
+    );
   }
 
   // Alternative way of doing this
   initDisplayAlt() {
     return forkJoin({
       time: this.atomicClockService.watchTime().pipe(
-        map(data => `${data.hour}:${data.minute}`),
-        take(1),
+        map((data) => `${data.hour}:${data.minute}`),
+        take(1)
       ),
       temperature: this.weatherService.watchTemperature().pipe(
-        map(data => `${data.temp}°${data.unit}`),
-        take(1),
+        map((data) => `${data.temp}°${data.unit}`),
+        take(1)
       ),
-      position: this.gpsService.getCurrentLocation().pipe(
-        pluck('city_name')
-      ),
+      position: this.gpsService.getCurrentLocation().pipe(pluck("city_name")),
     }).pipe(
-      map((measures) => [measures.position, measures.temperature, measures.time].join(' - ')),
-    )
+      map((measures) =>
+        [measures.position, measures.temperature, measures.time].join(" - ")
+      )
+    );
   }
 }
 

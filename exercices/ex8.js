@@ -16,8 +16,8 @@
  *
  * ("Paris - 25°C - 16:32")-("Paris - 26°C - 16:32")-("Paris - 26°C - 16:33")-("Paris - 26°C - 16:34") [...]
  *
- *
  */
+const { combineLatest, distinct, map, pluck } = require("rxjs/operators");
 
 class Exercice8 {
   constructor(gpsService, weatherService, atomicClockService) {
@@ -27,7 +27,21 @@ class Exercice8 {
   }
 
   updateDisplay() {
-    // TODO: Fix this function !
+    const position$ = this.gpsService
+      .getCurrentLocation()
+      .pipe(pluck("city_name"));
+    const temperature$ = this.weatherService
+      .watchTemperature()
+      .pipe(map((data) => `${data.temp}°${data.unit}`));
+    const time$ = this.atomicClockService
+      .watchTime()
+      .pipe(map((data) => `${data.hour}:${data.minute}`));
+
+    return position$.pipe(
+      combineLatest(temperature$, time$),
+      map((measures) => measures.join(" - ")),
+      distinct()
+    );
   }
 }
 
