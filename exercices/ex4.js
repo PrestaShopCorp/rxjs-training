@@ -60,8 +60,6 @@ const {
   groupBy,
   reduce,
   toArray,
-  map,
-  concatAll,
   take,
 } = require("rxjs/operators");
 
@@ -87,10 +85,7 @@ class Exercice4 {
         )
       ),
       toArray(),
-      map((arr) =>
-        arr.sort((a, b) => (a.contributions < b.contributions ? 1 : -1))
-      ),
-      concatAll(),
+      flatMap(contributors => contributors.sort((a, b) => (a.contributions < b.contributions ? 1 : -1))),
       take(10)
     );
   }
