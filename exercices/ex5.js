@@ -48,7 +48,7 @@
  *
  */
 const { from } = require("rxjs");
-const { tap, delay, flatMap, concatMap, map } = require("rxjs/operators");
+const { delay, flatMap, concatMap, map } = require("rxjs/operators");
 
 class Exercice5 {
   constructor(searchService) {
