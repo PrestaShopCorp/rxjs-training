@@ -1,4 +1,3 @@
-
 /**
  * Exercice 2
  * ----------
@@ -27,10 +26,7 @@
  */
 
 const ex2 = (input$) => {
-
-    // TODO: Fix this function !
-
+  // TODO: Fix this function !
 };
 
-
-module.exports = {ex2};
+module.exports = { ex2 };

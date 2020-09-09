@@ -5,7 +5,8 @@
   "main": "index.js",
   "private": true,
   "devDependencies": {
-    "jest": "^24.9.0"
+    "jest": "^24.9.0",
+    "prettier": "^2.1.1"
   },
   "dependencies": {
     "lodash": "^4.17.15",
@@ -13,7 +14,8 @@
     "rxjs": "^6.5.3"
   },
   "scripts": {
-    "test": "jest tests"
+    "test": "jest tests",
+    "format": "prettier --write \"exercices/**/*{.js,.ts}\" \"tests/**/*{.js,.ts}\""
   },
   "jest": {
     "verbose": true

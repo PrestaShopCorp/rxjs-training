@@ -1,4 +1,3 @@
-
 /**
  * Exercice 5
  * ----------
@@ -50,19 +49,14 @@
  */
 
 class Exercice5 {
+  constructor(searchService) {
+    this.searchService = searchService;
+  }
 
-    constructor(searchService) {
-        this.searchService = searchService;
-    }
-
-    scrapSerp(keyword) {
-
-        // TODO: Fix this function !
-        return this.searchService.search(keyword, 1);
-    };
-
+  scrapSerp(keyword) {
+    // TODO: Fix this function !
+    return this.searchService.search(keyword, 1);
+  }
 }
-
-
 
 module.exports = Exercice5;

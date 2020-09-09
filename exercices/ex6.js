@@ -1,4 +1,3 @@
-
 /**
  * Exercice 6
  * ----------
@@ -55,19 +54,13 @@
  */
 
 class Exercice6 {
+  constructor(immoService) {
+    this.immoService = immoService;
+  }
 
-    constructor(immoService) {
-        this.immoService = immoService;
-    }
-
-    estimateWithRetry(addresses) {
-
-        // TODO: Fix this function !
-
-    };
-
+  estimateWithRetry(addresses) {
+    // TODO: Fix this function !
+  }
 }
-
-
 
 module.exports = Exercice6;

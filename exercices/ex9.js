@@ -1,4 +1,3 @@
-
 /**
  * Exercice 9
  * ----------
@@ -17,7 +16,7 @@
  * Lorsque le ticket n'est pas réservable, l'observable renvoyé est en erreur, avec l'erreur suivante :
  * new Error("Invalid concertId");
  *
-  *
+ *
  * Lors des moments d'affluence, l'API est TRÈS sollicitée et renvoie souvent des erreurs
  * ("Bad Gateway", "Service Unavailable", "Try again later", "Game over" ...et j'en passe !)
  *
@@ -50,20 +49,14 @@
  */
 
 class Exercice8 {
+  constructor(ticketingService) {
+    this.ticketingService = ticketingService;
+  }
 
-    constructor(ticketingService) {
-        this.ticketingService = ticketingService;
-    }
-
-    buyTicketWithRetry(concertId) {
-        
-        // TODO: Fix this function !
-        return this.ticketingService.buyTicket(concertId);
-
-    };
-
+  buyTicketWithRetry(concertId) {
+    // TODO: Fix this function !
+    return this.ticketingService.buyTicket(concertId);
+  }
 }
-
-
 
 module.exports = Exercice8;

@@ -1,4 +1,3 @@
-
 /**
  * Exercice 8
  * ----------
@@ -21,20 +20,15 @@
  */
 
 class Exercice8 {
+  constructor(gpsService, weatherService, atomicClockService) {
+    this.gpsService = gpsService;
+    this.weatherService = weatherService;
+    this.atomicClockService = atomicClockService;
+  }
 
-    constructor(gpsService, weatherService, atomicClockService) {
-        this.gpsService = gpsService;
-        this.weatherService = weatherService;
-        this.atomicClockService = atomicClockService;
-    }
-
-    updateDisplay() {
-        // TODO: Fix this function !
-
-    };
-
+  updateDisplay() {
+    // TODO: Fix this function !
+  }
 }
-
-
 
 module.exports = Exercice8;

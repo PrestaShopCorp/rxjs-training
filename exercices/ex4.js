@@ -1,4 +1,3 @@
-
 /**
  * Exercice 4
  * ----------
@@ -58,18 +57,14 @@
  */
 
 class Exercice4 {
+  constructor(githubService) {
+    this.githubService = githubService;
+  }
 
-    constructor(githubService) {
-        this.githubService = githubService;
-    }
-
-    topContributors(organization) {
-        // TODO: Fix this function !
-        return this.githubService.getOrgRepos(organization);
-    };
-
+  topContributors(organization) {
+    // TODO: Fix this function !
+    return this.githubService.getOrgRepos(organization);
+  }
 }
-
-
 
 module.exports = Exercice4;

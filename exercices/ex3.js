@@ -1,4 +1,3 @@
-
 /**
  * Exercice 3
  * ----------
@@ -27,18 +26,14 @@
  */
 
 class Exercice3 {
+  constructor(githubService) {
+    this.githubService = githubService;
+  }
 
-    constructor(githubService) {
-        this.githubService = githubService;
-    }
-
-    ex3(githubUser) {
-        // TODO: Fix this function !
-        return this.githubService.getUserRepos(githubUser);
-    };
-
+  ex3(githubUser) {
+    // TODO: Fix this function !
+    return this.githubService.getUserRepos(githubUser);
+  }
 }
-
-
 
 module.exports = Exercice3;
